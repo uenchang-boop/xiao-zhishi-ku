@@ -22,6 +22,13 @@ function isValidUrl(u) {
   return /^https?:\/\/[^\s]+$/i.test(u);
 }
 
+// 防 Sheets Formula Injection：開頭是 = + - @ 的字串會被 Sheets 當公式
+// 在前面加單引號讓 Sheets 視為純文字
+function sanitize(s) {
+  if (s && /^[=+\-@]/.test(s)) return "'" + s;
+  return s;
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
@@ -54,7 +61,14 @@ function doPost(e) {
       new Date(), "Asia/Taipei", "yyyy-MM-dd"
     );
     // 欄位順序與 CSV 一致：日期 | 類別 | 標題 | 網址 | 備註 | 內文
-    sheet.appendRow([today, category, title, url, note, ""]);
+    sheet.appendRow([
+      today,
+      category,
+      sanitize(title),
+      sanitize(url),
+      sanitize(note),
+      ""
+    ]);
 
     return _json({ ok: true, category: category, url: url });
   } catch (err) {
