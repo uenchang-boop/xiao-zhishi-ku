@@ -1,10 +1,13 @@
 # 小知識庫 部署說明
 
-> ✅ **2026-05-22 已完成部署**
+> ✅ **2026-05-22 已完成部署（當前 v2）**
 > - 手機網頁：https://uenchang-boop.github.io/xiao-zhishi-ku/
 > - GitHub Repo：https://github.com/uenchang-boop/xiao-zhishi-ku
 > - Sheets：https://docs.google.com/spreadsheets/d/1bhMqeIPKphRGQ8k7S-vs0_Kd2LCy76Iu6Aw6KNoqh-o/
 > - Apps Script URL：已串接，不公開貼於此
+>
+> **v2 變更**：網址改為非必填，「網址 / 標題 / 備註 至少填一個」即可送出
+> **舊 v1 部署**：URL 結尾 `...Q/exec`，未封存（不影響運作，建議去 Apps Script「管理部署作業」封存）
 >
 > **底下部署步驟保留作為日後重建 / 改架構參考。**
 > **改網頁/改 Apps Script 的維護備忘看本檔最末。**
