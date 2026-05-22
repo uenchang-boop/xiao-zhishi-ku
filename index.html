@@ -120,8 +120,8 @@
   </div>
 
   <div class="field">
-    <label>網址 *</label>
-    <input type="url" id="url" placeholder="https://..." autocomplete="off">
+    <label>網址（可空）</label>
+    <input type="url" id="url" placeholder="https://...（沒網址也可以）" autocomplete="off">
   </div>
 
   <div class="field">
@@ -189,7 +189,10 @@
     const url = document.getElementById("url").value.trim();
     const title = document.getElementById("title").value.trim();
     const note = document.getElementById("note").value.trim();
-    if (!url) { toast("網址必填", "err"); return; }
+    if (!url && !title && !note) {
+      toast("網址 / 標題 / 備註 至少填一個", "err");
+      return;
+    }
     const token = getToken();
     if (!token) { toast("尚未設定授權密鑰", "err"); return; }
 

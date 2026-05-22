@@ -44,11 +44,15 @@ function doPost(e) {
     if (!SHEET_MAP[category]) {
       return _json({ ok: false, error: "未知類別: " + category });
     }
-    if (!url || !isValidUrl(url)) {
+    // 網址改為非必填：有填才驗證格式
+    if (url && !isValidUrl(url)) {
       return _json({ ok: false, error: "網址格式不正確（需 http:// 或 https:// 開頭）" });
     }
     if (url.length > 2000) {
       return _json({ ok: false, error: "網址過長" });
+    }
+    if (!url && !title && !note) {
+      return _json({ ok: false, error: "網址 / 標題 / 備註 至少填一個" });
     }
 
     const ss = SpreadsheetApp.openById(SHEET_ID);
