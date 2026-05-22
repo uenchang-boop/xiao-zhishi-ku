@@ -1,9 +1,11 @@
 /**
- * 小知識庫 - Google Apps Script Web App 後端
- * 接收手機網頁 POST 進來的資料，寫入對應 Sheet
- *
- * 部署成 Web App 後會拿到一個 URL，貼到前端 index.html 的 API_URL 即可
+ * 小知識庫 - Google Apps Script Web App 後端（獨立專案版）
+ * 從 https://script.google.com/home 新建專案使用
+ * 用 openById 連到指定的 Sheets，不依賴「擴充功能 → Apps Script」
  */
+
+// 你的 Sheets ID（URL 中 /d/ 後面那串）
+const SHEET_ID = "1bhMqeIPKphRGQ8k7S-vs0_Kd2LCy76Iu6Aw6KNoqh-o";
 
 // 「類別」對應到 Sheet 名稱
 const SHEET_MAP = {
@@ -14,7 +16,6 @@ const SHEET_MAP = {
 
 // 共享密鑰：前端必須帶這個 token 才允許寫入
 // ⚠️ 部署前請改成你自選的隨機字串（至少 16 字元，英數即可）
-// 例如：https://www.random.org/strings/ 產一個
 const SHARED_TOKEN = "PLEASE_CHANGE_THIS_TO_YOUR_OWN_TOKEN";
 
 // 簡易 URL 格式檢查
@@ -23,7 +24,6 @@ function isValidUrl(u) {
 }
 
 // 防 Sheets Formula Injection：開頭是 = + - @ 的字串會被 Sheets 當公式
-// 在前面加單引號讓 Sheets 視為純文字
 function sanitize(s) {
   if (s && /^[=+\-@]/.test(s)) return "'" + s;
   return s;
@@ -51,7 +51,7 @@ function doPost(e) {
       return _json({ ok: false, error: "網址過長" });
     }
 
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ss = SpreadsheetApp.openById(SHEET_ID);
     const sheet = ss.getSheetByName(SHEET_MAP[category]);
     if (!sheet) {
       return _json({ ok: false, error: "找不到 sheet: " + category });
