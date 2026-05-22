@@ -37,6 +37,7 @@ function doPost(e) {
     const url = String(data.url || "").trim();
     const title = String(data.title || "").trim().slice(0, 500);
     const note = String(data.note || "").trim().slice(0, 2000);
+    const content = String(data.content || "").trim().slice(0, 50000);
 
     if (token !== SHARED_TOKEN) {
       return _json({ ok: false, error: "未授權" });
@@ -51,8 +52,8 @@ function doPost(e) {
     if (url.length > 2000) {
       return _json({ ok: false, error: "網址過長" });
     }
-    if (!url && !title && !note) {
-      return _json({ ok: false, error: "網址 / 標題 / 備註 至少填一個" });
+    if (!url && !title && !note && !content) {
+      return _json({ ok: false, error: "網址 / 標題 / 備註 / 內文 至少填一個" });
     }
 
     const ss = SpreadsheetApp.openById(SHEET_ID);
@@ -71,7 +72,7 @@ function doPost(e) {
       sanitize(title),
       sanitize(url),
       sanitize(note),
-      ""
+      sanitize(content)
     ]);
 
     return _json({ ok: true, category: category, url: url });

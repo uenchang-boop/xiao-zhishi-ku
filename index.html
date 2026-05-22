@@ -134,6 +134,11 @@
     <textarea id="note" placeholder="想記住的重點、為什麼想看..."></textarea>
   </div>
 
+  <div class="field">
+    <label>內文（可空，貼整篇文章用）</label>
+    <textarea id="content" placeholder="可直接貼整篇文章內容..." style="min-height:140px;"></textarea>
+  </div>
+
   <button class="submit" id="submit">新增到 Sheets</button>
   <p class="hint">提交後會直接寫入 Google Sheets 對應 sheet 最後一列。</p>
 </div>
@@ -189,8 +194,9 @@
     const url = document.getElementById("url").value.trim();
     const title = document.getElementById("title").value.trim();
     const note = document.getElementById("note").value.trim();
-    if (!url && !title && !note) {
-      toast("網址 / 標題 / 備註 至少填一個", "err");
+    const content = document.getElementById("content").value.trim();
+    if (!url && !title && !note && !content) {
+      toast("網址 / 標題 / 備註 / 內文 至少填一個", "err");
       return;
     }
     const token = getToken();
@@ -204,7 +210,7 @@
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ token, category: currentCat, url, title, note })
+        body: JSON.stringify({ token, category: currentCat, url, title, note, content })
       });
       const json = await res.json();
       if (json.ok) {
@@ -212,6 +218,7 @@
         document.getElementById("url").value = "";
         document.getElementById("title").value = "";
         document.getElementById("note").value = "";
+        document.getElementById("content").value = "";
       } else {
         toast("❌ " + (json.error || "未知錯誤"), "err");
         if (json.error === "未授權") {
